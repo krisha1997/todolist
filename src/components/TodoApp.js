@@ -1,17 +1,21 @@
 import React, { useState } from "react";
+
 import "./todoapp.css";
 
 function TodoApp() {
   const [task, setTask] = useState("");
   const [tasklist, setTaskList] = useState([]);
-  const [taskediting, setTaskediting] = useState(null);
+  const [taskediting, setTaskEditing] = useState(null);
   const [editingtext, setEditingtext] = useState("");
+  const [isediting, setisEditing] = useState(false);
+
   const handleChange = (e) => {
     setTask(e.target.value);
   };
 
   const AddTask = () => {
 
+    
     if (task !== "") {
 
       const taskDetails = {
@@ -24,7 +28,6 @@ function TodoApp() {
     }
   };
 
-
   function submitEdits(id) {
     const updatedTasks = [...tasklist].map((task) => {
       if (task.id === id) {
@@ -33,7 +36,8 @@ function TodoApp() {
       return task;
     });
     setTaskList(updatedTasks);
-    setTaskediting(null);
+    setTaskEditing(null);
+    setisEditing(false)
   }
 
   const deletetask = (e, id) => {
@@ -69,7 +73,7 @@ function TodoApp() {
         Add
       </button>
       <br />
-      {tasklist !== [] ? (
+      {tasklist.length !== 0 ? (
         <ul>
           {tasklist.map((t) => (
             <li className={t.isCompleted ? "crossText" : "listitem"} key={t.id}>
@@ -82,26 +86,31 @@ function TodoApp() {
               />:
               <div>{t.value}</div>
               }
+
               <button
                 className="completed"
                 onClick={(e) => taskCompleted(e, t.id)}
               >
-                Completed
+              Completed
               </button>
 
               <button className="delete" onClick={(e) => deletetask(e, t.id)}>
                 Delete
               </button>
 
-              <button className="edit" onClick={(e) => setTaskediting(t.id)}>
+              <button className="edit" onClick={() => {setTaskEditing(t.id); setisEditing(true)} }>
                 Edit
               </button>
 
-              <button  onClick={(e) => submitEdits(t.id)}>
+             {isediting &&  <button className="submitedit" onClick={(e) => submitEdits(t.id) }>
                 submit edit
               </button>
+             }
+
+             
             </li>
           ))}
+
         </ul>
       ) : null}
     </div>
